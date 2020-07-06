@@ -30,7 +30,7 @@ class PhotoCollectionViewCell: UICollectionViewCell, PhotoCellViewModelDelegate{
 		let lb = UILabel.init()
 		lb.textColor = .white
 		lb.textAlignment = .center
-		lb.backgroundColor = .systemRed
+		lb.backgroundColor = .systemBlue
 		lb.adjustsFontSizeToFitWidth = true
 		return lb
 	}()
