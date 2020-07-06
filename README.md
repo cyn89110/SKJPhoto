@@ -1,6 +1,6 @@
 # SKJPhotos
 
-Usage Example:
+Usage example:
 
 	lazy var photoView: SKJPhotoView = {
 		let view = SKJPhotoView.init(frame: .zero)
