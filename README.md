@@ -2,14 +2,14 @@
 
 Usage Example:
 
-lazy var photoView: SKJPhotoView = {
+	lazy var photoView: SKJPhotoView = {
 		let view = SKJPhotoView.init(frame: .zero)
 		view.dataSource = self
 		view.delegate = self
 		return view
 	}()
-  
-override func viewDidLoad() {
+
+	override func viewDidLoad() {
 		super.viewDidLoad()
 
 		view.addSubview(photoView)
