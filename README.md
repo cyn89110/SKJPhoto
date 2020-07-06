@@ -1,4 +1,4 @@
-# SKJPhoto
+# SKJPhotos
 
 Usage Example:
 
