@@ -9,7 +9,8 @@ view.dataSource = self
 
 view.delegate = self
 
-addSuview...
+
+addSubview...
 
 set constraint...
 
