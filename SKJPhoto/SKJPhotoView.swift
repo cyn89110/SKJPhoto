@@ -14,6 +14,7 @@ public protocol SKJPhotoViewDatasource: AnyObject {
 	func numberOfItemsInARow() -> Int
 	func maximumNumberOfItems() -> Int
 	func beginFromTop() -> Bool
+	func tintColor() -> UIColor
 }
 
 public protocol SKJPhotoViewDelegate: AnyObject {
@@ -129,6 +130,7 @@ extension SKJPhotoView: UICollectionViewDelegate, UICollectionViewDataSource, UI
 		let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as! PhotoCollectionViewCell
 
 		cell.viewModel = viewModel.cellViewModel(at: indexPath.row)
+		cell.orderLabel.backgroundColor = dataSource?.tintColor()
 		return cell
 	}
 	
