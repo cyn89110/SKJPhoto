@@ -17,7 +17,7 @@ class ViewController: UIViewController, SKJPhotoViewDatasource, SKJPhotoViewDele
 	}
 
 	func numberOfItemsInARow() -> Int {
-		return 4
+		return 3
 	}
 
 	func maximumNumberOfItems() -> Int {

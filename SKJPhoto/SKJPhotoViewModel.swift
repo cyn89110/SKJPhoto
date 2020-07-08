@@ -31,6 +31,15 @@ class SKJPhotoViewModel{
 
 	func selectItem(at index: Int){
 
+		guard index > -1 else{
+			return
+		}
+
+		guard photos.count > index
+			else{
+				return
+		}
+
 		let photo = photos[index]
 
 		if(photo.order > 0){
