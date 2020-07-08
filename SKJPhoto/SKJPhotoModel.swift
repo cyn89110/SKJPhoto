@@ -15,7 +15,12 @@ protocol SKJPhotoModelDelegate: AnyObject {
 	func refreshImage(image: UIImage?)
 }
 
-public class SKJPhotoModel{
+public class SKJPhotoModel: Equatable{
+
+	public static func == (lhs: SKJPhotoModel, rhs: SKJPhotoModel) -> Bool {
+		return lhs.asset === rhs.asset && lhs.order == rhs.order
+	}
+
 
 	init(asset: PHAsset) {
 		self.asset = asset

@@ -17,25 +17,23 @@ public protocol SKJPhotoViewDatasource: AnyObject {
 }
 
 public protocol SKJPhotoViewDelegate: AnyObject {
-	func photosDidEditing(photos: [PHAsset])
+	func selectedPhotosModified(photos: [PHAsset])
 }
 
-public class SKJPhotoView: UIView {
+public class SKJPhotoView: UIView, SKJPhotoViewModelDelegate {
 
-	var photos : [SKJPhotoModel] = []
-	var selectedPhotos: [SKJPhotoModel] = []{
-		didSet{
-			delegate?.photosDidEditing(photos: selectedPhotos.map({$0.asset}))
-		}
+	func photoDidLoad() {
+		collectionView.reloadData()
 	}
 
-	var fromTop: Bool = true
-	var limit:Int = 15
-	var numberOfRow: Int = 4
+	func selectedPhotosChanged() {
+
+		delegate?.selectedPhotosModified(photos: viewModel.photos.map({$0.asset}))
+	}
 
 	public weak var delegate: SKJPhotoViewDelegate?{
 		didSet{
-			delegate?.photosDidEditing(photos: selectedPhotos.map({$0.asset}))
+			delegate?.selectedPhotosModified(photos: viewModel.photos.map({$0.asset}))
 		}
 	}
 
@@ -47,17 +45,21 @@ public class SKJPhotoView: UIView {
 				return
 			}
 
-			fromTop = dataSource.beginFromTop()
-			limit = dataSource.maximumNumberOfItems()
-			numberOfRow = dataSource.numberOfItemsInARow()
-			fetchPhotos()
+			viewModel.fromTop = dataSource.beginFromTop()
+			viewModel.limit = dataSource.maximumNumberOfItems()
+			viewModel.numberOfRow = dataSource.numberOfItemsInARow()
+			viewModel.fetchPhotos()
 		}
 	}
+
+	var viewModel: SKJPhotoViewModel!
 
 	public override init(frame: CGRect) {
 
 		super.init(frame: frame)
 
+		viewModel = SKJPhotoViewModel()
+		viewModel.delegate = self
 		setupUI()
 	}
 
@@ -89,62 +91,11 @@ public class SKJPhotoView: UIView {
 	}()
 }
 
-extension SKJPhotoView{
-
-	public func fetchPhotos(){
-
-		let fetchOoptions = PHFetchOptions.init()
-		
-		fetchOoptions.sortDescriptors = [.init(key: "creationDate", ascending: false)]
-
-		let allPhotos = PHAsset.fetchAssets(with: .image, options: fetchOoptions)
-
-		DispatchQueue.global(qos: .background).async {
-
-			allPhotos.enumerateObjects { [weak self] (asset, count, stop) in
-
-				self?.photos.append(SKJPhotoModel.init(asset: asset))
-
-				if (count + 1 == allPhotos.count){
-
-					DispatchQueue.main.async {
-
-						self?.collectionView.reloadData()
-					}
-				}
-			}
-		}
-	}
-}
-
 extension SKJPhotoView: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout{
 
 	public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 
-		let photo = photos[indexPath.row]
-
-		if(photo.order > 0){
-
-			photo.order = 0
-			selectedPhotos.removeAll { (model) -> Bool in
-				return model === photo
-			}
-
-			var index = 1
-			selectedPhotos.forEach { (model) in
-				model.order = index
-				index = index + 1
-			}
-
-		}else{
-
-			if(limit == selectedPhotos.count){
-				return
-			}
-
-			selectedPhotos.append(photo)
-			photo.order = selectedPhotos.count
-		}
+		viewModel.selectItem(at: indexPath.row)
 	}
 
 	var width: CGFloat{
@@ -177,12 +128,12 @@ extension SKJPhotoView: UICollectionViewDelegate, UICollectionViewDataSource, UI
 		
 		let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as! PhotoCollectionViewCell
 
-		cell.viewModel = SKJPhotoCollectionViewCellViewModel.init(model: photos[indexPath.row])
+		cell.viewModel = viewModel.cellViewModel(at: indexPath.row)
 		return cell
 	}
 	
 	public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-		return photos.count
+		return viewModel.photos.count
 	}
 	
 }

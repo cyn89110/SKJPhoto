@@ -12,12 +12,12 @@ import Photos
 
 class ViewController: UIViewController, SKJPhotoViewDatasource, SKJPhotoViewDelegate {
 
-	func photosDidEditing(photos: [PHAsset]) {
+	func selectedPhotosModified(photos: [PHAsset]) {
 		print(photos.count)
 	}
 
 	func numberOfItemsInARow() -> Int {
-		return 3
+		return 4
 	}
 
 	func maximumNumberOfItems() -> Int {
