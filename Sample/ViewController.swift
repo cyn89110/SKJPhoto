@@ -21,7 +21,7 @@ class ViewController: UIViewController, SKJPhotoViewDatasource, SKJPhotoViewDele
 	}
 
 	func maximumNumberOfItems() -> Int {
-		return 15
+		return 1
 	}
 
 	func beginFromTop() -> Bool {

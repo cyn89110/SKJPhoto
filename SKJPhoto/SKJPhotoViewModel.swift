@@ -23,6 +23,7 @@ class SKJPhotoViewModel{
 	var limit:Int = 15
 	var numberOfRow: Int = 4
 	var photos : [SKJPhotoModel] = []
+
 	var selectedPhotos: [SKJPhotoModel] = []{
 		didSet{
 			delegate?.selectedPhotosChanged()
@@ -41,6 +42,12 @@ class SKJPhotoViewModel{
 		}
 
 		let photo = photos[index]
+
+		if(limit == 1){
+
+			selectedPhotos = [photo]
+			return
+		}
 
 		if(photo.order > 0){
 

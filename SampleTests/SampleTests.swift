@@ -39,7 +39,7 @@ class SampleTests: XCTestCase {
 		XCTAssertEqual(viewModel.selectedPhotos.count, 2)
 	}
 
-	func testComplexSelect(){
+	func testComplexSelection(){
 
 		let viewModel = SKJPhotoViewModel()
 		viewModel.limit = 3
