@@ -9,11 +9,6 @@
 import Foundation
 import Photos
 
-public protocol SKJPhotoViewModelDelegate: AnyObject {
-	func currentPhotoChanged()
-	func selectedPhotosChanged()
-}
-
 protocol SKJPhotoViewModelInternalDelegate: AnyObject{
 
 	func photoDidLoad()
@@ -24,12 +19,24 @@ public enum SelectionMode{
 	case multiple
 }
 
-public class SKJPhotoViewModel{
+public protocol SelectorSpec {
+	func selectItem(at index: Int)
+	var dataSource: SelectorDatasource! { get set }
+}
 
-	var configure: SKJPhotoConfigure
+public class SKJPhotoViewModel: SelectorDatasource{
 
-	public init(configure: SKJPhotoConfigure){
+	var selector: SelectorSpec!
+	var configure: SKJPhotoConfigure{
+		didSet{
+			fetchPhotos()
+		}
+	}
+
+	public init(configure: SKJPhotoConfigure, selector: SelectorSpec){
 		self.configure = configure
+		self.selector = selector
+		self.selector.dataSource = self
 	}
 
 	public var mode: SelectionMode = .multiple{
@@ -46,80 +53,14 @@ public class SKJPhotoViewModel{
 			}
 		}
 	}
-
-	public weak var delegate: SKJPhotoViewModelDelegate?{
-		didSet{
-			fetchPhotos()
-		}
-	}
 	
 	weak var internalDelegate: SKJPhotoViewModelInternalDelegate?
 
-	var photos : [SKJPhotoModel] = []
-	var selectedPhotos: [SKJPhotoModel] = []{
-		didSet{
-			delegate?.selectedPhotosChanged()
-		}
-	}
-	var currentPhoto: SKJPhotoModel?{
-
-		didSet{
-			oldValue?.isMask = false
-			currentPhoto?.isMask = true
-		}
-	}
+	public var photos : [SKJPhotoModel] = []
 
 	func selectItem(at index: Int){
 
-		guard index > -1 else{
-			return
-		}
-
-		guard photos.count > index
-			else{
-				return
-		}
-
-		let photo = photos[index]
-
-		if(configure.limit == 1){
-
-			selectedPhotos = [photo]
-			return
-		}
-
-		if(photo.order > 0){
-
-			if(photo !== currentPhoto){
-				currentPhoto = photo
-				return
-			}
-
-			photo.order = 0
-			selectedPhotos.removeAll { (model) -> Bool in
-				return model === photo
-			}
-
-			var index = 1
-			selectedPhotos.forEach { (model) in
-				model.order = index
-				index = index + 1
-			}
-
-			if let lastPhoto = selectedPhotos.last{
-				currentPhoto = lastPhoto
-			}
-
-		}else{
-
-			if(configure.limit == selectedPhotos.count){
-				return
-			}
-
-			currentPhoto = photo
-			selectedPhotos.append(photo)
-			photo.order = selectedPhotos.count
-		}
+		selector.selectItem(at: index)
 	}
 
 	func cellViewModel(at index: Int) -> SKJPhotoCollectionViewCellViewModel{
@@ -129,10 +70,11 @@ public class SKJPhotoViewModel{
 		viewModel.circleMultiplier = configure.circleMultiplier
 		viewModel.backgroundColor = configure.circleColor
 		viewModel.tintColor = configure.tintColor
+		viewModel.maskColor = configure.maskColor
 		return viewModel
 	}
 
-	func fetchPhotos(){
+	public func fetchPhotos(){
 
 		let fetchOoptions = PHFetchOptions.init()
 

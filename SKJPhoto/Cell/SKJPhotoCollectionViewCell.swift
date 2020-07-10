@@ -29,7 +29,7 @@ class PhotoCollectionViewCell: UICollectionViewCell, PhotoCellViewModelDelegate{
 	lazy var whiteView: UIView = {
 
 		let view = UIView.init()
-		view.backgroundColor = UIColor.init(white: 1.0, alpha: 0.5)
+		view.backgroundColor = viewModel.maskColor
 		return view
 	}()
 

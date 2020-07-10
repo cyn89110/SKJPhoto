@@ -54,6 +54,7 @@ public class SKJPhotoCollectionViewCellViewModel: SKJPhotoModelDelegate{
 	var circleMultiplier: CGFloat = 1/4
 	var tintColor: UIColor?
 	var backgroundColor: UIColor?
+	var maskColor: UIColor?
 
 	var image: UIImage?
 
