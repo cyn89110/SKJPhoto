@@ -10,33 +10,22 @@ import UIKit
 import SKJPhoto
 import Photos
 
-class ViewController: UIViewController, SKJPhotoViewDatasource, SKJPhotoViewDelegate {
+class ViewController: UIViewController, SKJPhotoViewModelDelegate {
 
-	func selectedPhotosModified(photos: [PHAsset]) {
-		print(photos.count)
+	func currentPhotoChanged() {
+
 	}
 
-	func numberOfItemsInARow() -> Int {
-		return 3
-	}
+	func selectedPhotosChanged() {
 
-	func maximumNumberOfItems() -> Int {
-		return 1
-	}
-
-	func beginFromTop() -> Bool {
-		return true
-	}
-
-
-	func tintColor() -> UIColor {
-		return .systemBlue
 	}
 
 	lazy var photoView: SKJPhotoView = {
-		let view = SKJPhotoView.init(frame: .zero)
-		view.dataSource = self
-		view.delegate = self
+
+		let viewModel = SKJPhotoViewModel.init(configure: .line)
+		let view = SKJPhotoView.init(viewModel: viewModel, frame: .zero)
+		viewModel.delegate = self
+		viewModel.mode = .multiple
 		return view
 	}()
 
@@ -50,6 +39,5 @@ class ViewController: UIViewController, SKJPhotoViewDatasource, SKJPhotoViewDele
 		photoView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
 		photoView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
 	}
-
 }
 

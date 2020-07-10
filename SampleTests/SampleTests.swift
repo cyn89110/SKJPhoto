@@ -14,19 +14,23 @@ class SampleTests: XCTestCase {
 
 	func testOutOfRange(){
 
-		let viewModel = SKJPhotoViewModel()
+		var config = SKJPhotoConfigure.instagram
+		config.limit = 3
+		let viewModel = SKJPhotoViewModel.init(configure: config)
+
 		let photo1 = SKJPhotoModel.init(asset: PHAsset.init())
 		let photo2 = SKJPhotoModel.init(asset: PHAsset.init())
 		let photo3 = SKJPhotoModel.init(asset: PHAsset.init())
+
 		viewModel.photos = [photo1,photo2,photo3]
 		viewModel.selectItem(at: 10)
 	}
 
 	func testMaximumLimit(){
 
-		let viewModel = SKJPhotoViewModel()
-		viewModel.limit = 2
-
+		var config = SKJPhotoConfigure.instagram
+		config.limit = 2
+		let viewModel = SKJPhotoViewModel.init(configure: config)
 		let photo1 = SKJPhotoModel.init(asset: PHAsset.init())
 		let photo2 = SKJPhotoModel.init(asset: PHAsset.init())
 		let photo3 = SKJPhotoModel.init(asset: PHAsset.init())
@@ -41,8 +45,9 @@ class SampleTests: XCTestCase {
 
 	func testComplexSelection(){
 
-		let viewModel = SKJPhotoViewModel()
-		viewModel.limit = 3
+		var config = SKJPhotoConfigure.instagram
+		config.limit = 3
+		let viewModel = SKJPhotoViewModel.init(configure: config)
 
 		let photo1 = SKJPhotoModel.init(asset: PHAsset.init())
 		let photo2 = SKJPhotoModel.init(asset: PHAsset.init())

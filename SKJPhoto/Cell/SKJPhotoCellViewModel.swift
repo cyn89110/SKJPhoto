@@ -11,36 +11,53 @@ import Photos
 
 protocol PhotoCellViewModelDelegate: AnyObject {
 
-	func setupImage(image: UIImage?)
-	func setupLabel()
+	func reload()
 }
 
 public class SKJPhotoCollectionViewCellViewModel: SKJPhotoModelDelegate{
 
-	func refreshImage(image: UIImage?) {
-		delegate?.setupImage(image: image)
+	func statusChanged() {
+		delegate?.reload()
 	}
 
-	func orderDidChanged() {
-		delegate?.setupLabel()
+	func refreshImage(image: UIImage?) {
+		self.image = image
+		delegate?.reload()
 	}
 
 	weak var delegate: PhotoCellViewModelDelegate?{
 		didSet{
-			delegate?.setupLabel()
-			delegate?.setupImage(image: nil)
+			delegate?.reload()
 		}
 	}
 
+	var isMaskHidden: Bool{
+		return !model.isMask
+	}
+
 	var isOrderLabelHidden: Bool{
-		return model.order == 0
+		return !model.isMultiSelect
+	}
+
+	var labelText: String{
+		return model.order > 0 ? "\(model.order)" : ""
 	}
 
 	var order: String?{
 		return model.order > 0 ? "\(model.order)" : nil
 	}
 
-	var model: SKJPhotoModel
+	var labelBackgroudColor: UIColor?{
+		return model.order > 0 ? tintColor : backgroundColor
+	}
+	var multiplier: CGFloat = 0.7
+	var circleMultiplier: CGFloat = 1/4
+	var tintColor: UIColor?
+	var backgroundColor: UIColor?
+
+	var image: UIImage?
+
+	private var model: SKJPhotoModel
 
 	init(model: SKJPhotoModel){
 

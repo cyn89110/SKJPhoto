@@ -9,58 +9,23 @@
 import UIKit
 import Photos
 
-public protocol SKJPhotoViewDatasource: AnyObject {
-
-	func numberOfItemsInARow() -> Int
-	func maximumNumberOfItems() -> Int
-	func beginFromTop() -> Bool
-	func tintColor() -> UIColor
-}
-
-public protocol SKJPhotoViewDelegate: AnyObject {
-	func selectedPhotosModified(photos: [PHAsset])
-}
-
-public class SKJPhotoView: UIView, SKJPhotoViewModelDelegate {
+public class SKJPhotoView: UIView, SKJPhotoViewModelInternalDelegate {
 
 	func photoDidLoad() {
 		collectionView.reloadData()
 	}
 
-	func selectedPhotosChanged() {
-
-		delegate?.selectedPhotosModified(photos: viewModel.photos.map({$0.asset}))
-	}
-
-	public weak var delegate: SKJPhotoViewDelegate?{
-		didSet{
-			delegate?.selectedPhotosModified(photos: viewModel.photos.map({$0.asset}))
-		}
-	}
-
-
-	public weak var dataSource: SKJPhotoViewDatasource?{
-		didSet{
-
-			guard let dataSource = dataSource else {
-				return
-			}
-
-			viewModel.fromTop = dataSource.beginFromTop()
-			viewModel.limit = dataSource.maximumNumberOfItems()
-			viewModel.numberOfRow = dataSource.numberOfItemsInARow()
-			viewModel.fetchPhotos()
-		}
+	public func setMode(mode: SelectionMode){
+		viewModel.mode = mode
 	}
 
 	var viewModel: SKJPhotoViewModel!
 
-	public override init(frame: CGRect) {
+	public init(viewModel: SKJPhotoViewModel, frame: CGRect){
 
 		super.init(frame: frame)
-
-		viewModel = SKJPhotoViewModel()
-		viewModel.delegate = self
+		self.viewModel = viewModel
+		self.viewModel.internalDelegate = self
 		setupUI()
 	}
 
@@ -98,22 +63,10 @@ extension SKJPhotoView: UICollectionViewDelegate, UICollectionViewDataSource, UI
 
 		viewModel.selectItem(at: indexPath.row)
 	}
-
-	var width: CGFloat{
-
-		guard let dataSource = dataSource else{
-			return (collectionView.frame.width - 3) / 4
-		}
-
-		let numberOfSpace = dataSource.numberOfItemsInARow() - 1
-		let space = CGFloat(numberOfSpace) * 1.0
-		let fill = collectionView.frame.width - space
-		let itemSize = fill / CGFloat(dataSource.numberOfItemsInARow())
-		return floor(itemSize)
-	}
 	
 	public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-		
+
+		let width = viewModel.width(frame: collectionView.frame)
 		return CGSize.init(width: width, height: width)
 	}
 	
@@ -130,7 +83,6 @@ extension SKJPhotoView: UICollectionViewDelegate, UICollectionViewDataSource, UI
 		let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as! PhotoCollectionViewCell
 
 		cell.viewModel = viewModel.cellViewModel(at: indexPath.row)
-		cell.orderLabel.backgroundColor = dataSource?.tintColor()
 		return cell
 	}
 	

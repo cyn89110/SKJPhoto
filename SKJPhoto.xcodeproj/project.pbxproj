@@ -30,6 +30,7 @@
 		6195036F24B5B135009DFFBE /* SKJPhoto.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61D58C7424AF066C006AA2C4 /* SKJPhoto.framework */; };
 		6195037024B5B135009DFFBE /* SKJPhoto.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 61D58C7424AF066C006AA2C4 /* SKJPhoto.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6195037524B5B767009DFFBE /* SKJPhotoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6195037424B5B767009DFFBE /* SKJPhotoViewModel.swift */; };
+		6195037B24B61986009DFFBE /* SKJPhotoConfigure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6195037A24B61986009DFFBE /* SKJPhotoConfigure.swift */; };
 		61D58C7924AF066C006AA2C4 /* SKJPhoto.h in Headers */ = {isa = PBXBuildFile; fileRef = 61D58C7724AF066C006AA2C4 /* SKJPhoto.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		61D58C8024AF0710006AA2C4 /* SKJPhotoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61D58C7F24AF0710006AA2C4 /* SKJPhotoView.swift */; };
 		61D58C8424AF0804006AA2C4 /* SKJPhotoCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61D58C8324AF0804006AA2C4 /* SKJPhotoCollectionViewCell.swift */; };
@@ -81,6 +82,7 @@
 		6195036524B5AF98009DFFBE /* SampleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleTests.swift; sourceTree = "<group>"; };
 		6195036724B5AF98009DFFBE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6195037424B5B767009DFFBE /* SKJPhotoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SKJPhotoViewModel.swift; sourceTree = "<group>"; };
+		6195037A24B61986009DFFBE /* SKJPhotoConfigure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SKJPhotoConfigure.swift; sourceTree = "<group>"; };
 		61D58C7424AF066C006AA2C4 /* SKJPhoto.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SKJPhoto.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		61D58C7724AF066C006AA2C4 /* SKJPhoto.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SKJPhoto.h; sourceTree = "<group>"; };
 		61D58C7824AF066C006AA2C4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -146,6 +148,33 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		6195037C24B85B35009DFFBE /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				61D58C8724AF0854006AA2C4 /* SKJPhotoModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		6195037D24B8648D009DFFBE /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				61D58C8524AF083A006AA2C4 /* SKJPhotoCellViewModel.swift */,
+				61D58C8324AF0804006AA2C4 /* SKJPhotoCollectionViewCell.swift */,
+			);
+			path = Cell;
+			sourceTree = "<group>";
+		};
+		6195037E24B866E9009DFFBE /* View */ = {
+			isa = PBXGroup;
+			children = (
+				6195037A24B61986009DFFBE /* SKJPhotoConfigure.swift */,
+				6195037424B5B767009DFFBE /* SKJPhotoViewModel.swift */,
+				61D58C7F24AF0710006AA2C4 /* SKJPhotoView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 		61D58C6A24AF066C006AA2C4 = {
 			isa = PBXGroup;
 			children = (
@@ -172,11 +201,9 @@
 			children = (
 				61D58C7724AF066C006AA2C4 /* SKJPhoto.h */,
 				61D58C7824AF066C006AA2C4 /* Info.plist */,
-				6195037424B5B767009DFFBE /* SKJPhotoViewModel.swift */,
-				61D58C7F24AF0710006AA2C4 /* SKJPhotoView.swift */,
-				61D58C8324AF0804006AA2C4 /* SKJPhotoCollectionViewCell.swift */,
-				61D58C8524AF083A006AA2C4 /* SKJPhotoCellViewModel.swift */,
-				61D58C8724AF0854006AA2C4 /* SKJPhotoModel.swift */,
+				6195037E24B866E9009DFFBE /* View */,
+				6195037D24B8648D009DFFBE /* Cell */,
+				6195037C24B85B35009DFFBE /* Model */,
 			);
 			path = SKJPhoto;
 			sourceTree = "<group>";
@@ -349,6 +376,7 @@
 			files = (
 				61D58C8624AF083A006AA2C4 /* SKJPhotoCellViewModel.swift in Sources */,
 				6195037524B5B767009DFFBE /* SKJPhotoViewModel.swift in Sources */,
+				6195037B24B61986009DFFBE /* SKJPhotoConfigure.swift in Sources */,
 				61D58C8424AF0804006AA2C4 /* SKJPhotoCollectionViewCell.swift in Sources */,
 				61D58C8824AF0854006AA2C4 /* SKJPhotoModel.swift in Sources */,
 				61D58C8024AF0710006AA2C4 /* SKJPhotoView.swift in Sources */,

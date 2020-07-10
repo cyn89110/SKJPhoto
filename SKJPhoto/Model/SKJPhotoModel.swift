@@ -11,8 +11,8 @@ import Photos
 
 protocol SKJPhotoModelDelegate: AnyObject {
 
-	func orderDidChanged()
 	func refreshImage(image: UIImage?)
+	func statusChanged()
 }
 
 public class SKJPhotoModel: Equatable{
@@ -26,17 +26,28 @@ public class SKJPhotoModel: Equatable{
 		self.asset = asset
 	}
 
+	var isMultiSelect: Bool = true{
+		didSet{
+			delegate?.statusChanged()
+		}
+	}
+
 	var asset: PHAsset
+	var isMask: Bool = false{
+		didSet{
+			delegate?.statusChanged()
+		}
+	}
 
 	weak var delegate: SKJPhotoModelDelegate?{
 		didSet{
-			delegate?.orderDidChanged()
+			delegate?.statusChanged()
 		}
 	}
 
 	var order: Int = 0{
 		didSet{
-			delegate?.orderDidChanged()
+			delegate?.statusChanged()
 		}
 	}
 
