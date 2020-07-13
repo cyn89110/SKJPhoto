@@ -59,7 +59,11 @@ public class LineSelector: SelectorSpec{
 		}
 	}
 
-	private func select(photo: SKJPhotoModel){
+	private func select(photo: SKJPhotoModel?){
+
+		guard let photo = photo else {
+			return
+		}
 
 		photo.isMask = true
 		selectedPhotos.append(photo)

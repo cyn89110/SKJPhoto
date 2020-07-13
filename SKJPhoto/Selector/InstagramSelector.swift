@@ -24,24 +24,13 @@ public class InstagramSelector: SelectorSpec{
 
 	public func initSetup() {
 
+		currentPhoto = dataSource.photos.first
+
 		if(max > 1){
-			if let photo = dataSource.photos.first{
-				select(photo: photo)
-			}
+			select(photo: currentPhoto)
 		}
+
 		reloadNumber()
-	}
-
-	func reloadNumber(){
-
-		if(max > 1){
-			dataSource.photos.forEach({$0.isNumberHidden = false})
-		}
-		if(max == 1){
-			dataSource.photos.forEach { (photo) in
-				photo.isNumberHidden = true
-			}
-		}
 	}
 
 	weak var delegate: InstagramSelectorDelegate?
@@ -61,20 +50,56 @@ public class InstagramSelector: SelectorSpec{
 
 	public var max: Int{
 		didSet{
-			reloadNumber()
+
+			if(oldValue != max){
+
+				selectedPhotos = []
+				dataSource.photos.forEach({$0.order = 0})
+
+				if(max > 1){
+
+					select(photo: currentPhoto)
+					showNumber()
+
+				}else{
+
+					if let photo = currentPhoto{
+						selectedPhotos = [photo]
+					}
+					hideNumber()
+				}
+			}
 		}
 	}
 
 	var currentPhoto: SKJPhotoModel?{
 
 		didSet{
-			
+
 			oldValue?.isMask = false
 			currentPhoto?.isMask = true
 
 			if let asset = currentPhoto?.asset{
 				delegate?.instagramSelector(current: asset)
 			}
+		}
+	}
+
+	func showNumber(){
+		dataSource.photos.forEach({$0.isNumberHidden = false})
+	}
+
+	func hideNumber(){
+		dataSource.photos.forEach ({$0.isNumberHidden = true})
+	}
+
+	func reloadNumber(){
+
+		if(max > 1){
+			showNumber()
+		}
+		if(max == 1){
+			hideNumber()
 		}
 	}
 	
@@ -93,6 +118,7 @@ public class InstagramSelector: SelectorSpec{
 
 		if(max == 1){
 
+			currentPhoto = photo
 			selectedPhotos = [photo]
 			return
 		}
@@ -115,7 +141,15 @@ public class InstagramSelector: SelectorSpec{
 		}
 	}
 
-	func select(photo: SKJPhotoModel){
+	func select(photo: SKJPhotoModel?){
+
+		guard let photo = photo else {
+			return
+		}
+
+		guard photo.order == 0 else{
+			return
+		}
 
 		currentPhoto = photo
 		selectedPhotos.append(photo)
