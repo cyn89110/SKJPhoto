@@ -21,18 +21,18 @@ public class SKJPhotoModel: Equatable{
 		return lhs.asset === rhs.asset && lhs.order == rhs.order
 	}
 
-
 	init(asset: PHAsset) {
 		self.asset = asset
 	}
 
-	var isMultiSelect: Bool = true{
+	var asset: PHAsset
+
+	var isNumberHidden: Bool = true{
 		didSet{
 			delegate?.statusChanged()
 		}
 	}
 
-	var asset: PHAsset
 	var isMask: Bool = false{
 		didSet{
 			delegate?.statusChanged()

@@ -15,10 +15,6 @@ public class SKJPhotoView: UIView, SKJPhotoViewModelInternalDelegate {
 		collectionView.reloadData()
 	}
 
-	public func setMode(mode: SelectionMode){
-		viewModel.mode = mode
-	}
-
 	var viewModel: SKJPhotoViewModel!
 
 	public init(viewModel: SKJPhotoViewModel, frame: CGRect){

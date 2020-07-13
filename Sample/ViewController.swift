@@ -10,18 +10,21 @@ import UIKit
 import SKJPhoto
 import Photos
 
-class ViewController: UIViewController, LineSelectorDelegate {
+class ViewController: UIViewController, InstagramSelectorDelegate {
 
-	func lineSelector(selected photos: [PHAsset]) {
-		print(photos.count)
+	func instagramSelector(current photo: PHAsset) {
+
+	}
+
+	func instagramSelector(selectedPhotos: [PHAsset]) {
+
 	}
 
 	lazy var photoView: SKJPhotoView = {
 
-		let selector = LineSelector.init(max: 100, delegate: self)
+		let selector = InstagramSelector.init(max: 15, delegate: self)
 		let viewModel = SKJPhotoViewModel.init(configure: .instagram, selector: selector)
 		let view = SKJPhotoView.init(viewModel: viewModel, frame: .zero)
-		viewModel.mode = .multiple
 		viewModel.fetchPhotos()
 		return view
 	}()

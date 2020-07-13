@@ -175,10 +175,17 @@
 				6195037A24B61986009DFFBE /* SKJPhotoConfigure.swift */,
 				6195037424B5B767009DFFBE /* SKJPhotoViewModel.swift */,
 				61D58C7F24AF0710006AA2C4 /* SKJPhotoView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		6195038324BC3BF8009DFFBE /* Selector */ = {
+			isa = PBXGroup;
+			children = (
 				6195037F24B872BC009DFFBE /* InstagramSelector.swift */,
 				6195038124B87B9F009DFFBE /* LineSelector.swift */,
 			);
-			path = View;
+			path = Selector;
 			sourceTree = "<group>";
 		};
 		61D58C6A24AF066C006AA2C4 = {
@@ -207,6 +214,7 @@
 			children = (
 				61D58C7724AF066C006AA2C4 /* SKJPhoto.h */,
 				61D58C7824AF066C006AA2C4 /* Info.plist */,
+				6195038324BC3BF8009DFFBE /* Selector */,
 				6195037E24B866E9009DFFBE /* View */,
 				6195037D24B8648D009DFFBE /* Cell */,
 				6195037C24B85B35009DFFBE /* Model */,

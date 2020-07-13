@@ -36,7 +36,7 @@ public class SKJPhotoCollectionViewCellViewModel: SKJPhotoModelDelegate{
 	}
 
 	var isOrderLabelHidden: Bool{
-		return !model.isMultiSelect
+		return model.isNumberHidden
 	}
 
 	var labelText: String{

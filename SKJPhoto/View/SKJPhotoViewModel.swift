@@ -14,12 +14,9 @@ protocol SKJPhotoViewModelInternalDelegate: AnyObject{
 	func photoDidLoad()
 }
 
-public enum SelectionMode{
-	case single
-	case multiple
-}
-
 public protocol SelectorSpec {
+
+	func initSetup()
 	func selectItem(at index: Int)
 	var dataSource: SelectorDatasource! { get set }
 }
@@ -37,21 +34,6 @@ public class SKJPhotoViewModel: SelectorDatasource{
 		self.configure = configure
 		self.selector = selector
 		self.selector.dataSource = self
-	}
-
-	public var mode: SelectionMode = .multiple{
-		didSet{
-			switch(mode){
-			case .single:
-				photos.forEach { (photo) in
-					photo.isMultiSelect = false
-				}
-			case .multiple:
-				photos.forEach { (photo) in
-					photo.isMultiSelect = true
-				}
-			}
-		}
 	}
 	
 	weak var internalDelegate: SKJPhotoViewModelInternalDelegate?
@@ -92,6 +74,7 @@ public class SKJPhotoViewModel: SelectorDatasource{
 
 					DispatchQueue.main.async {
 
+						self.selector.initSetup()
 						self.internalDelegate?.photoDidLoad()
 					}
 				}
