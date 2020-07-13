@@ -16,11 +16,11 @@ public protocol LineSelectorDelegate: AnyObject{
 
 public class LineSelector: SelectorSpec{
 
+	public weak var photoView: SKJPhotoView?
+
 	public func initSetup() {}
 
 	public weak var delegate: LineSelectorDelegate?
-
-	public weak var dataSource: SelectorDatasource!
 
 	public var selectedPhotos: [SKJPhotoModel] = []{
 		didSet{
@@ -28,8 +28,9 @@ public class LineSelector: SelectorSpec{
 		}
 	}
 
-	public init(delegate: LineSelectorDelegate){
+	public init(view: SKJPhotoView,delegate: LineSelectorDelegate){
 		self.delegate = delegate
+		self.photoView = view
 	}
 
 	private func isIndexValid(index: Int) -> Bool{
@@ -37,7 +38,11 @@ public class LineSelector: SelectorSpec{
 		if(index < 0){
 			return false
 		}
-		if(dataSource.photos.count < index){
+
+		guard let photoView = photoView else{
+			return false
+		}
+		if(photoView.photos.count < index){
 			return false
 		}
 		return true
@@ -76,7 +81,9 @@ public class LineSelector: SelectorSpec{
 			return
 		}
 
-		let photo = dataSource.photos[index]
+		guard let photo = photoView?.photos[index] else{
+			return
+		}
 
 		photo.order > 0 ? deselect(photo: photo) : select(photo: photo)
 

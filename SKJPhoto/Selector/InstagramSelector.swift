@@ -6,67 +6,102 @@
 //  Copyright © 2020 蘇冠融. All rights reserved.
 //
 
-import Foundation
+import UIKit
 import Photos
 
 public protocol InstagramSelectorDelegate: AnyObject{
 
-	func instagramSelector(current photo: PHAsset)
+	func instagramSelector(current photo: UIImage)
 	func instagramSelector(selectedPhotos: [PHAsset])
+	func instagramSelectorOverSelect()
+	func instagramSelectorEnableToSelect()
 }
 
-public protocol SelectorDatasource: AnyObject{
-	
-	var photos: [SKJPhotoModel]{ get set }
+public protocol InstagramSelectorDatasource: AnyObject{
+
+	func instagramSelectorOutputImageSize() -> CGSize
 }
 
 public class InstagramSelector: SelectorSpec{
 
+	public init(max: Int,
+				delegate: InstagramSelectorDelegate,
+				view: SKJPhotoView) {
+
+		self.max = max
+		self.delegate = delegate
+		self.photoView = view
+		self.photoView?.selector = self
+	}
+
+	public weak var photoView: SKJPhotoView?
+
 	public func initSetup() {
 
-		currentPhoto = dataSource.photos.first
+		selectedPhotos = []
+		currentPhoto = photoView?.photos.first
 
-		if(max > 1){
-			select(photo: currentPhoto)
+		if let photo = currentPhoto{
+			select(photo: photo)
 		}
 
-		reloadNumber()
+		max > 1 ? showNumber() : hideNumber()
 	}
 
 	weak var delegate: InstagramSelectorDelegate?
+	public weak var dataSource: InstagramSelectorDatasource?
 
-	public init(max: Int, delegate: InstagramSelectorDelegate) {
-		self.max = max
-		self.delegate = delegate
-	}
+
 
 	public var selectedPhotos: [SKJPhotoModel] = []{
 		didSet{
 			delegate?.instagramSelector(selectedPhotos: selectedPhotos.map({$0.asset}))
+			isSelectable = selectedPhotos.count < max
 		}
 	}
 
-	weak public var dataSource: SelectorDatasource!
+	public func selectItem(at index: Int) {
+
+		guard index > -1 else{
+			return
+		}
+
+		guard let photoView = photoView else{
+			return
+		}
+
+		guard photoView.photos.count > index
+			else{
+				return
+		}
+
+		if(max > 1){
+			multipleSelect(at: index)
+		}else{
+			singleSelect(at: index)
+		}
+	}
 
 	public var max: Int{
 		didSet{
 
 			if(oldValue != max){
 
-				selectedPhotos = []
-				dataSource.photos.forEach({$0.order = 0})
+				reset()
 
-				if(max > 1){
-
-					select(photo: currentPhoto)
-					showNumber()
-
-				}else{
-
+				if(max == 1){
 					if let photo = currentPhoto{
 						selectedPhotos = [photo]
 					}
 					hideNumber()
+				}
+
+				if(max > 1){
+
+					if let photo = currentPhoto{
+						select(photo: photo)
+					}
+					showNumber()
 				}
 			}
 		}
@@ -80,46 +115,60 @@ public class InstagramSelector: SelectorSpec{
 			currentPhoto?.isMask = true
 
 			if let asset = currentPhoto?.asset{
-				delegate?.instagramSelector(current: asset)
+				loadImage(asset: asset)
 			}
 		}
 	}
 
+	func reset(){
+
+		selectedPhotos = []
+		photoView?.photos.forEach({$0.order = 0})
+	}
+
+	func loadImage(asset: PHAsset){
+
+		let options = PHImageRequestOptions()
+		options.deliveryMode = .highQualityFormat
+
+		var size = CGSize.init(width: 350, height: 350)
+		if let dataSource = dataSource{
+			size = dataSource.instagramSelectorOutputImageSize()
+		}
+
+		PHImageManager.default().requestImage(for: asset,
+											  targetSize: size,
+											  contentMode: .aspectFill,
+											  options: options,
+											  resultHandler: { (image, nil) in
+
+												if let image = image{
+													self.delegate?.instagramSelector(current: image)
+												}
+
+		})
+	}
+
 	func showNumber(){
-		dataSource.photos.forEach({$0.isNumberHidden = false})
+		photoView?.photos.forEach({$0.isNumberHidden = false})
 	}
 
 	func hideNumber(){
-		dataSource.photos.forEach ({$0.isNumberHidden = true})
+		photoView?.photos.forEach ({$0.isNumberHidden = true})
 	}
 
-	func reloadNumber(){
+	func singleSelect(at index: Int){
 
-		if(max > 1){
-			showNumber()
-		}
-		if(max == 1){
-			hideNumber()
-		}
-	}
-	
-	public func selectItem(at index: Int) {
-
-		guard index > -1 else{
+		guard let photo = photoView?.photos[index] else{
 			return
 		}
+		currentPhoto = photo
+		selectedPhotos = [photo]
+	}
 
-		guard dataSource.photos.count > index
-			else{
-				return
-		}
+	func multipleSelect(at index: Int){
 
-		let photo = dataSource.photos[index]
-
-		if(max == 1){
-
-			currentPhoto = photo
-			selectedPhotos = [photo]
+		guard let photo = photoView?.photos[index] else{
 			return
 		}
 
@@ -134,16 +183,21 @@ public class InstagramSelector: SelectorSpec{
 
 		}else{
 
-			if(max == selectedPhotos.count){
-				return
-			}
 			select(photo: photo)
 		}
 	}
 
-	func select(photo: SKJPhotoModel?){
+	var isSelectable: Bool = false{
+		didSet{
+			if oldValue != isSelectable{
+				isSelectable ? delegate?.instagramSelectorEnableToSelect() : delegate?.instagramSelectorOverSelect()
+			}
+		}
+	}
 
-		guard let photo = photo else {
+	func select(photo: SKJPhotoModel){
+
+		guard isSelectable else {
 			return
 		}
 

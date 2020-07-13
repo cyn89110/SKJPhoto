@@ -10,53 +10,85 @@ import UIKit
 import SKJPhoto
 import Photos
 
-class ViewController: UIViewController, InstagramSelectorDelegate {
+class ViewController: UIViewController, InstagramSelectorDelegate, InstagramSelectorDatasource {
 
-	func instagramSelector(current photo: PHAsset) {
+	func instagramSelectorOutputImageSize() -> CGSize {
+		return CGSize.init(width: imageView.frame.width, height: imageView.frame.height)
+	}
 
-		PHImageManager.default().requestImage(for: photo, targetSize: CGSize.init(width: imageView.frame.width, height: imageView.frame.height), contentMode: .aspectFill, options: .none, resultHandler: { (image, nil) in
+	func instagramSelectorOverSelect() {
+		print("Can not select more.")
+	}
 
-			self.imageView.image = image
-		})
+	func instagramSelectorEnableToSelect() {
+		print("Enable to select more.")
+	}
+
+	func instagramSelector(current photo: UIImage) {
+		imageView.image = photo
 	}
 
 	func instagramSelector(selectedPhotos: [PHAsset]) {
-		multipleButton.setTitle("\(selectedPhotos.count) / \(selector.max)", for: .normal)
+
+		guard let selector = selector else {
+			return
+		}
+
+		if(selector.max > 1){
+			statusButton.setTitle("\(selectedPhotos.count) / \(selector.max)", for: .normal)
+		}else{
+			statusButton.setTitle(nil, for: .normal)
+		}
 	}
 
-	lazy var multipleButton: UIButton = {
+	lazy var statusButton: UIButton = {
 
 		let btn = UIButton.init()
+		btn.backgroundColor = .init(white: 0, alpha: 0.5)
 		btn.addTarget(self, action: #selector(multipleButtonTapped), for: .touchUpInside)
 		return btn
 	}()
 
 	lazy var imageView: UIImageView = {
 		let imv = UIImageView.init()
+		imv.contentMode = .scaleAspectFill
+		imv.clipsToBounds = true
 		return imv
 	}()
 
-	lazy var selector = InstagramSelector.init(max: 15, delegate: self)
+	var selector: InstagramSelector?
 
 	lazy var photoView: SKJPhotoView = {
 
-		let viewModel = SKJPhotoViewModel.init(configure: .instagram, selector: selector)
-		let view = SKJPhotoView.init(viewModel: viewModel, frame: .zero)
-		viewModel.fetchPhotos()
+		let view = SKJPhotoView(frame: .zero)
+		view.configure = .instagram
 		return view
 	}()
 
 	@objc func multipleButtonTapped(){
 
+		guard let selector = selector else{
+			return
+		}
+
 		if(selector.max > 1){
 			selector.max = 1
 		}else{
-			selector.max = 15
+			selector.max = 10
 		}
 	}
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
+
+		setupUI()
+
+		selector = InstagramSelector.init(max: 10, delegate: self, view: photoView)
+		selector?.dataSource = self
+		photoView.fetchPhotos()
+	}
+
+	func setupUI(){
 
 		view.addSubview(imageView)
 		imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -65,18 +97,18 @@ class ViewController: UIViewController, InstagramSelectorDelegate {
 		imageView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
 		imageView.heightAnchor.constraint(equalTo: view.widthAnchor).isActive = true
 
-		view.addSubview(multipleButton)
-		multipleButton.translatesAutoresizingMaskIntoConstraints = false
-		multipleButton.bottomAnchor.constraint(equalTo: imageView.bottomAnchor).isActive = true
-		multipleButton.trailingAnchor.constraint(equalTo: imageView.trailingAnchor).isActive = true
-		multipleButton.heightAnchor.constraint(equalToConstant: 44.0).isActive = true
-		multipleButton.leadingAnchor.constraint(equalTo: imageView.leadingAnchor).isActive = true
+		view.addSubview(statusButton)
+		statusButton.translatesAutoresizingMaskIntoConstraints = false
+		statusButton.bottomAnchor.constraint(equalTo: imageView.bottomAnchor).isActive = true
+		statusButton.trailingAnchor.constraint(equalTo: imageView.trailingAnchor).isActive = true
+		statusButton.heightAnchor.constraint(equalToConstant: 44.0).isActive = true
+		statusButton.leadingAnchor.constraint(equalTo: imageView.leadingAnchor).isActive = true
 
 		view.addSubview(photoView)
 		photoView.translatesAutoresizingMaskIntoConstraints = false
 		photoView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
 		photoView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-		photoView.topAnchor.constraint(equalTo: imageView.bottomAnchor).isActive = true
+		photoView.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 1.0).isActive = true
 		photoView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
 	}
 }
