@@ -8,7 +8,7 @@ Instagram & Line style selector provided.
 
 Custom configure for apperance provided.
 
-# Creating
+# Usage
 
 	var selector: InstagramSelector?
 
