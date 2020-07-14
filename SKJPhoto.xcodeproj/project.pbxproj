@@ -26,12 +26,13 @@
 		6195035624B5AF97009DFFBE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6195035424B5AF97009DFFBE /* Main.storyboard */; };
 		6195035824B5AF98009DFFBE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6195035724B5AF98009DFFBE /* Assets.xcassets */; };
 		6195035B24B5AF98009DFFBE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6195035924B5AF98009DFFBE /* LaunchScreen.storyboard */; };
-		6195036624B5AF98009DFFBE /* SampleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6195036524B5AF98009DFFBE /* SampleTests.swift */; };
+		6195036624B5AF98009DFFBE /* InstagramSelectorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6195036524B5AF98009DFFBE /* InstagramSelectorTests.swift */; };
 		6195036F24B5B135009DFFBE /* SKJPhoto.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61D58C7424AF066C006AA2C4 /* SKJPhoto.framework */; };
 		6195037024B5B135009DFFBE /* SKJPhoto.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 61D58C7424AF066C006AA2C4 /* SKJPhoto.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6195037B24B61986009DFFBE /* SKJPhotoConfigure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6195037A24B61986009DFFBE /* SKJPhotoConfigure.swift */; };
 		6195038024B872BC009DFFBE /* InstagramSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6195037F24B872BC009DFFBE /* InstagramSelector.swift */; };
 		6195038224B87B9F009DFFBE /* LineSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6195038124B87B9F009DFFBE /* LineSelector.swift */; };
+		6195038724BD9E81009DFFBE /* LineSelectorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6195038624BD9E81009DFFBE /* LineSelectorTests.swift */; };
 		61D58C7924AF066C006AA2C4 /* SKJPhoto.h in Headers */ = {isa = PBXBuildFile; fileRef = 61D58C7724AF066C006AA2C4 /* SKJPhoto.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		61D58C8024AF0710006AA2C4 /* SKJPhotoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61D58C7F24AF0710006AA2C4 /* SKJPhotoView.swift */; };
 		61D58C8424AF0804006AA2C4 /* SKJPhotoCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61D58C8324AF0804006AA2C4 /* SKJPhotoCollectionViewCell.swift */; };
@@ -80,11 +81,12 @@
 		6195035A24B5AF98009DFFBE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		6195035C24B5AF98009DFFBE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6195036124B5AF98009DFFBE /* SampleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SampleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		6195036524B5AF98009DFFBE /* SampleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleTests.swift; sourceTree = "<group>"; };
+		6195036524B5AF98009DFFBE /* InstagramSelectorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstagramSelectorTests.swift; sourceTree = "<group>"; };
 		6195036724B5AF98009DFFBE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6195037A24B61986009DFFBE /* SKJPhotoConfigure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SKJPhotoConfigure.swift; sourceTree = "<group>"; };
 		6195037F24B872BC009DFFBE /* InstagramSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstagramSelector.swift; sourceTree = "<group>"; };
 		6195038124B87B9F009DFFBE /* LineSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineSelector.swift; sourceTree = "<group>"; };
+		6195038624BD9E81009DFFBE /* LineSelectorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineSelectorTests.swift; sourceTree = "<group>"; };
 		61D58C7424AF066C006AA2C4 /* SKJPhoto.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SKJPhoto.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		61D58C7724AF066C006AA2C4 /* SKJPhoto.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SKJPhoto.h; sourceTree = "<group>"; };
 		61D58C7824AF066C006AA2C4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -137,7 +139,8 @@
 		6195036424B5AF98009DFFBE /* SampleTests */ = {
 			isa = PBXGroup;
 			children = (
-				6195036524B5AF98009DFFBE /* SampleTests.swift */,
+				6195036524B5AF98009DFFBE /* InstagramSelectorTests.swift */,
+				6195038624BD9E81009DFFBE /* LineSelectorTests.swift */,
 				6195036724B5AF98009DFFBE /* Info.plist */,
 			);
 			path = SampleTests;
@@ -377,7 +380,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6195036624B5AF98009DFFBE /* SampleTests.swift in Sources */,
+				6195038724BD9E81009DFFBE /* LineSelectorTests.swift in Sources */,
+				6195036624B5AF98009DFFBE /* InstagramSelectorTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

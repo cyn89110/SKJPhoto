@@ -11,15 +11,10 @@ import Photos
 
 public protocol InstagramSelectorDelegate: AnyObject{
 
-	func instagramSelector(current photo: UIImage)
-	func instagramSelector(selectedPhotos: [PHAsset])
+	func instagramSelector(current photo: SKJPhotoModel)
+	func instagramSelector(selectedPhotos: [SKJPhotoModel])
 	func instagramSelectorOverSelect()
 	func instagramSelectorEnableToSelect()
-}
-
-public protocol InstagramSelectorDatasource: AnyObject{
-
-	func instagramSelectorOutputImageSize() -> CGSize
 }
 
 public class InstagramSelector: SelectorSpec{
@@ -48,37 +43,30 @@ public class InstagramSelector: SelectorSpec{
 		max > 1 ? showNumber() : hideNumber()
 	}
 
-	weak var delegate: InstagramSelectorDelegate?
-	public weak var dataSource: InstagramSelectorDatasource?
+	private weak var delegate: InstagramSelectorDelegate?
 
-
-
-	public var selectedPhotos: [SKJPhotoModel] = []{
+	var selectedPhotos: [SKJPhotoModel] = []{
 		didSet{
-			delegate?.instagramSelector(selectedPhotos: selectedPhotos.map({$0.asset}))
+			delegate?.instagramSelector(selectedPhotos: selectedPhotos)
 			isSelectable = selectedPhotos.count < max
 		}
 	}
 
 	public func selectItem(at index: Int) {
 
-		guard index > -1 else{
-			return
-		}
-
-		guard let photoView = photoView else{
-			return
-		}
-
-		guard photoView.photos.count > index
-			else{
+		guard
+			index > -1,
+			let photoView = photoView,
+			photoView.photos.count > index else{
 				return
 		}
 
-		if(max > 1){
+		if max > 1 {
 			multipleSelect(at: index)
-		}else{
+		}else if max == 1{
 			singleSelect(at: index)
+		}else{
+			assertionFailure("Error")
 		}
 	}
 
@@ -107,64 +95,34 @@ public class InstagramSelector: SelectorSpec{
 		}
 	}
 
-	var currentPhoto: SKJPhotoModel?{
+	private var currentPhoto: SKJPhotoModel?{
 
 		didSet{
+
+			guard oldValue != currentPhoto else{
+				return
+			}
 
 			oldValue?.isMask = false
 			currentPhoto?.isMask = true
 
-			if let asset = currentPhoto?.asset{
-				loadImage(asset: asset)
+			if let currentPhoto = currentPhoto{
+				delegate?.instagramSelector(current: currentPhoto)
 			}
 		}
 	}
 
-	func reset(){
-
-		selectedPhotos = []
-		photoView?.photos.forEach({$0.order = 0})
-	}
-
-	func loadImage(asset: PHAsset){
-
-		let options = PHImageRequestOptions()
-		options.deliveryMode = .highQualityFormat
-
-		var size = CGSize.init(width: 350, height: 350)
-		if let dataSource = dataSource{
-			size = dataSource.instagramSelectorOutputImageSize()
+	private var isSelectable: Bool = false{
+		didSet{
+			if oldValue != isSelectable{
+				isSelectable ? delegate?.instagramSelectorEnableToSelect() : delegate?.instagramSelectorOverSelect()
+			}
 		}
-
-		PHImageManager.default().requestImage(for: asset,
-											  targetSize: size,
-											  contentMode: .aspectFill,
-											  options: options,
-											  resultHandler: { (image, nil) in
-
-												if let image = image{
-													self.delegate?.instagramSelector(current: image)
-												}
-
-		})
 	}
 
-	func showNumber(){
-		photoView?.photos.forEach({$0.isNumberHidden = false})
-	}
+}
 
-	func hideNumber(){
-		photoView?.photos.forEach ({$0.isNumberHidden = true})
-	}
-
-	func singleSelect(at index: Int){
-
-		guard let photo = photoView?.photos[index] else{
-			return
-		}
-		currentPhoto = photo
-		selectedPhotos = [photo]
-	}
+private extension InstagramSelector{
 
 	func multipleSelect(at index: Int){
 
@@ -187,12 +145,27 @@ public class InstagramSelector: SelectorSpec{
 		}
 	}
 
-	var isSelectable: Bool = false{
-		didSet{
-			if oldValue != isSelectable{
-				isSelectable ? delegate?.instagramSelectorEnableToSelect() : delegate?.instagramSelectorOverSelect()
-			}
+	func reset(){
+
+		selectedPhotos = []
+		photoView?.photos.forEach({$0.order = 0})
+	}
+
+	func showNumber(){
+		photoView?.photos.forEach({$0.isNumberHidden = false})
+	}
+
+	func hideNumber(){
+		photoView?.photos.forEach ({$0.isNumberHidden = true})
+	}
+
+	func singleSelect(at index: Int){
+
+		guard let photo = photoView?.photos[index] else{
+			return
 		}
+		currentPhoto = photo
+		selectedPhotos = [photo]
 	}
 
 	func select(photo: SKJPhotoModel){

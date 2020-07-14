@@ -18,14 +18,14 @@ protocol SKJPhotoModelDelegate: AnyObject {
 public class SKJPhotoModel: Equatable{
 
 	public static func == (lhs: SKJPhotoModel, rhs: SKJPhotoModel) -> Bool {
-		return lhs.asset === rhs.asset && lhs.order == rhs.order
+		return lhs.asset === rhs.asset
 	}
 
 	init(asset: PHAsset) {
 		self.asset = asset
 	}
 
-	var asset: PHAsset
+	public var asset: PHAsset
 
 	var isNumberHidden: Bool = true{
 		didSet{
@@ -45,7 +45,7 @@ public class SKJPhotoModel: Equatable{
 		}
 	}
 
-	var order: Int = 0{
+	public var order: Int = 0{
 		didSet{
 			delegate?.statusChanged()
 		}

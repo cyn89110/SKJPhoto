@@ -57,7 +57,12 @@ public class SKJPhotoView: UIView {
 
 	public var configure: SKJPhotoConfigure?
 
-	public var photos : [SKJPhotoModel] = []
+	public var photos : [SKJPhotoModel] = []{
+		didSet{
+			selector?.initSetup()
+			self.collectionView.reloadData()
+		}
+	}
 }
 
 extension SKJPhotoView{
@@ -88,16 +93,17 @@ extension SKJPhotoView{
 
 		DispatchQueue.global(qos: .background).async {
 
+			var photos = [SKJPhotoModel]()
+
 			allPhotos.enumerateObjects { (asset, count, stop) in
 
-				self.photos.append(SKJPhotoModel.init(asset: asset))
+				photos.append(SKJPhotoModel.init(asset: asset))
 
 				if (count + 1 == allPhotos.count){
 
 					DispatchQueue.main.async {
 
-						self.selector?.initSetup()
-						self.collectionView.reloadData()
+						self.photos = photos
 					}
 				}
 			}

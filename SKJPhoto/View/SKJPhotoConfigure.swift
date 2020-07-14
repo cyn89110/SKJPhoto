@@ -17,8 +17,7 @@ public struct SKJPhotoConfigure {
 									  circleMultiplier: 0.75,
 									  maskColor: .init(white: 1.0, alpha: 0.4),
 									  circleColor: .init(white: 1.0, alpha: 0.4),
-									  tintColor: .systemBlue,
-									  doubleCheck: true)
+									  tintColor: .systemBlue)
 	}
 
 	public static var line: Self{
@@ -28,8 +27,7 @@ public struct SKJPhotoConfigure {
 									  circleMultiplier: 0.6,
 									  maskColor: .init(white: 0.0, alpha: 0.4),
 									  circleColor: .clear,
-									  tintColor: .init(red: 0, green: 195/255, blue: 0, alpha: 1.0),
-									  doubleCheck: false)
+									  tintColor: .init(red: 0, green: 195/255, blue: 0, alpha: 1.0))
 	}
 
 	var fromTop: Bool = true
@@ -39,5 +37,4 @@ public struct SKJPhotoConfigure {
 	var maskColor: UIColor
 	var circleColor: UIColor
 	var tintColor: UIColor
-	var doubleCheck: Bool
 }

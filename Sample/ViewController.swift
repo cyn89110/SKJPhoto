@@ -10,11 +10,24 @@ import UIKit
 import SKJPhoto
 import Photos
 
-class ViewController: UIViewController, InstagramSelectorDelegate, InstagramSelectorDatasource {
+class ViewController: UIViewController, InstagramSelectorDelegate {
 
-	func instagramSelectorOutputImageSize() -> CGSize {
-		return CGSize.init(width: imageView.frame.width, height: imageView.frame.height)
+	func instagramSelector(current photo: SKJPhotoModel) {
+		loadImage(asset: photo.asset)
 	}
+
+	func instagramSelector(selectedPhotos: [SKJPhotoModel]) {
+
+		guard let selector = selector else {
+			return
+		}
+		if(selector.max > 1){
+			statusButton.setTitle("\(selectedPhotos.count) / \(selector.max)", for: .normal)
+		}else{
+			statusButton.setTitle(nil, for: .normal)
+		}
+	}
+
 
 	func instagramSelectorOverSelect() {
 		print("Can not select more.")
@@ -26,19 +39,6 @@ class ViewController: UIViewController, InstagramSelectorDelegate, InstagramSele
 
 	func instagramSelector(current photo: UIImage) {
 		imageView.image = photo
-	}
-
-	func instagramSelector(selectedPhotos: [PHAsset]) {
-
-		guard let selector = selector else {
-			return
-		}
-
-		if(selector.max > 1){
-			statusButton.setTitle("\(selectedPhotos.count) / \(selector.max)", for: .normal)
-		}else{
-			statusButton.setTitle(nil, for: .normal)
-		}
 	}
 
 	lazy var statusButton: UIButton = {
@@ -84,9 +84,25 @@ class ViewController: UIViewController, InstagramSelectorDelegate, InstagramSele
 		setupUI()
 
 		selector = InstagramSelector.init(max: 10, delegate: self, view: photoView)
-		selector?.dataSource = self
 		photoView.fetchPhotos()
 	}
+
+	func loadImage(asset: PHAsset){
+
+		let options = PHImageRequestOptions()
+		options.deliveryMode = .highQualityFormat
+
+		PHImageManager.default().requestImage(
+			for: asset,
+			targetSize: CGSize.init(width: imageView.frame.width, height: imageView.frame.height),
+			contentMode: .aspectFill,
+			options: options,
+			resultHandler: { (image, nil) in
+
+				self.imageView.image = image
+		})
+	}
+
 
 	func setupUI(){
 

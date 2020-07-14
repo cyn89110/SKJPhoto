@@ -18,7 +18,9 @@ public class LineSelector: SelectorSpec{
 
 	public weak var photoView: SKJPhotoView?
 
-	public func initSetup() {}
+	public func initSetup() {
+		photoView?.photos.forEach({$0.isNumberHidden = false})
+	}
 
 	public weak var delegate: LineSelectorDelegate?
 
@@ -31,20 +33,19 @@ public class LineSelector: SelectorSpec{
 	public init(view: SKJPhotoView,delegate: LineSelectorDelegate){
 		self.delegate = delegate
 		self.photoView = view
+		self.photoView?.selector = self
 	}
 
 	private func isIndexValid(index: Int) -> Bool{
 
-		if(index < 0){
+		guard
+			index >= 0,
+			let photoView = photoView,
+			index < photoView.photos.count
+		else{
 			return false
 		}
 
-		guard let photoView = photoView else{
-			return false
-		}
-		if(photoView.photos.count < index){
-			return false
-		}
 		return true
 	}
 
@@ -86,7 +87,6 @@ public class LineSelector: SelectorSpec{
 		}
 
 		photo.order > 0 ? deselect(photo: photo) : select(photo: photo)
-
 	}
 }
 
