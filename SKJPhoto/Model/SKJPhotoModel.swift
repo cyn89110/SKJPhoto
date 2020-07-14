@@ -21,11 +21,16 @@ public class SKJPhotoModel: Equatable{
 		return lhs.asset === rhs.asset
 	}
 
+	public var asset: PHAsset
+	public var order: Int = 0{
+		didSet{
+			delegate?.statusChanged()
+		}
+	}
+
 	init(asset: PHAsset) {
 		self.asset = asset
 	}
-
-	public var asset: PHAsset
 
 	var isNumberHidden: Bool = true{
 		didSet{
@@ -40,12 +45,6 @@ public class SKJPhotoModel: Equatable{
 	}
 
 	weak var delegate: SKJPhotoModelDelegate?{
-		didSet{
-			delegate?.statusChanged()
-		}
-	}
-
-	public var order: Int = 0{
 		didSet{
 			delegate?.statusChanged()
 		}

@@ -13,6 +13,7 @@ import Photos
 class ViewController: UIViewController, InstagramSelectorDelegate {
 
 	func instagramSelector(current photo: SKJPhotoModel) {
+
 		loadImage(asset: photo.asset)
 	}
 
